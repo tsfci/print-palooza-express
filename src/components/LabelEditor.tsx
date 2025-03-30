@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
@@ -29,6 +29,26 @@ const LabelEditor: React.FC<LabelEditorProps> = ({ onGeneratePrintContent }) => 
   const [elements, setElements] = useState<LabelElement[]>([]);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+
+  // Listen for custom events from Sidebar
+  useEffect(() => {
+    const handleAddText = () => addElement('text');
+    const handleAddBarcode = () => addElement('barcode');
+    const handleAddQrCode = () => addElement('qrcode');
+    const handleAddImage = () => addElement('image');
+    
+    document.addEventListener('addText', handleAddText);
+    document.addEventListener('addBarcode', handleAddBarcode);
+    document.addEventListener('addQrCode', handleAddQrCode);
+    document.addEventListener('addImage', handleAddImage);
+    
+    return () => {
+      document.removeEventListener('addText', handleAddText);
+      document.removeEventListener('addBarcode', handleAddBarcode);
+      document.removeEventListener('addQrCode', handleAddQrCode);
+      document.removeEventListener('addImage', handleAddImage);
+    };
+  }, []);
 
   const addElement = (type: 'text' | 'barcode' | 'qrcode' | 'image') => {
     const id = Date.now().toString();
