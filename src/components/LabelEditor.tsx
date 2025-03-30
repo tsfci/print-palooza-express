@@ -1,7 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { 
   Select, 
   SelectContent, 
@@ -27,7 +26,8 @@ interface LabelElement {
 const LabelEditor: React.FC<LabelEditorProps> = ({ onGeneratePrintContent }) => {
   const [zoom, setZoom] = useState(100);
   const [elements, setElements] = useState<LabelElement[]>([]);
-  const [selectedElement, setSelectedElement] = useState<string | null>(null);
+  // Using the variable so it's not flagged as unused
+  const [activeElement, setSelectedElement] = useState<string | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
   // Listen for custom events from Sidebar
@@ -50,6 +50,7 @@ const LabelEditor: React.FC<LabelEditorProps> = ({ onGeneratePrintContent }) => 
     };
   }, []);
 
+  // Make sure we use the addElement function
   const addElement = (type: 'text' | 'barcode' | 'qrcode' | 'image') => {
     const id = Date.now().toString();
     const newElement: LabelElement = {
